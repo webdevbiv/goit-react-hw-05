@@ -6,14 +6,16 @@ const getNavLinkClass = ({ isActive }) => clsx(s.link, isActive && s.active);
 
 const Navigation = () => {
   return (
-    <nav className={s.nav}>
-      <NavLink to="/" className={getNavLinkClass}>
-        Home
-      </NavLink>
-      <NavLink to="/movies" className={getNavLinkClass}>
-        Movies
-      </NavLink>
-    </nav>
+    <header>
+      <nav className={s.nav}>
+        <NavLink to="/" className={getNavLinkClass}>
+          Home
+        </NavLink>
+        <NavLink to="/movies" className={getNavLinkClass}>
+          Movies
+        </NavLink>
+      </nav>
+    </header>
   );
 };
 

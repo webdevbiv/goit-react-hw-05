@@ -4,7 +4,7 @@ import TestApi from './services/TestApi';
 function App() {
   return (
     <>
-      <TestApi />
+      {/* <TestApi /> */}
       <AppRoutes />
     </>
   );
