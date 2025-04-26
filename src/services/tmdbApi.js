@@ -18,16 +18,19 @@ export const fetchTrendingMovies = async () => {
 };
 
 // Search movies
-export const searchMovies = async query => {
+export const fetchSearchMovies = async (query, page = 1) => {
   const { data } = await axiosInstance.get('/search/movie', {
     params: {
       query,
       include_adult: false,
       language: 'en-US',
-      page: 1,
+      page: page,
     },
   });
-  return data.results;
+  return {
+    movies: data.results,
+    totalPages: data.total_pages,
+  };
 };
 
 // Movie details

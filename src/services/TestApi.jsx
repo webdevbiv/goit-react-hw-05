@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import {
   fetchTrendingMovies,
-  searchMovies,
+  fetchSearchMovies,
   fetchMovieDetails,
   fetchMovieCast,
   fetchMovieReviews,
@@ -14,7 +14,7 @@ const TestApi = () => {
         const trending = await fetchTrendingMovies();
         console.log('🔥 Trending Movies:', trending);
 
-        const search = await searchMovies('avatar');
+        const search = await fetchSearchMovies('avatar');
         console.log('🔍 Search Results:', search);
 
         const details = await fetchMovieDetails(19995); // Avatar ID
