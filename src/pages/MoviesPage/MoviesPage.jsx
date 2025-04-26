@@ -1,119 +1,83 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { fetchSearchMovies } from '../../services/tmdbApi';
 import MoviesList from '../../components/MoviesList/MoviesList';
 import { BarLoader } from 'react-spinners';
-
 import s from './MoviesPage.module.scss';
-import { useLocation } from 'react-router-dom';
 
 const MoviesPage = () => {
   const location = useLocation();
   const activeMovieId = location.state?.activeMovieId ?? null;
-  const [searchQuery, setSearchQuery] = useState(() => {
-    const saved = localStorage.getItem('savedMovies');
-    return saved ? JSON.parse(saved).searchQuery : '';
-  });
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log(searchParams);
 
-  const [movies, setMovies] = useState(() => {
-    const saved = localStorage.getItem('savedMovies');
-    return saved ? JSON.parse(saved).movies : [];
-  });
+  const searchQuery = searchParams.get('query') || '';
+  const pageParam = Number(searchParams.get('page')) || 1;
 
-  const [page, setPage] = useState(() => {
-    const saved = localStorage.getItem('savedMovies');
-    return saved ? JSON.parse(saved).page : 1;
-  });
-
-  const [totalPages, setTotalPages] = useState(() => {
-    const saved = localStorage.getItem('savedMovies');
-    return saved ? JSON.parse(saved).totalPages : 0;
-  });
-
+  const [movies, setMovies] = useState([]);
+  // const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isSearched, setIsSearched] = useState(false);
-
-  const resetMoviesState = () => {
-    setMovies([]);
-    setPage(1);
-    setTotalPages(0);
-  };
 
   useEffect(() => {
-    localStorage.setItem(
-      'savedMovies',
-      JSON.stringify({
-        movies,
-        page,
-        totalPages,
-        searchQuery,
-      })
-    );
-  }, [movies, page, totalPages, searchQuery]);
+    const fetchMovies = async () => {
+      if (!searchQuery) return;
 
-  const handleSubmit = async e => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchSearchMovies(searchQuery, pageParam);
+
+        if (pageParam === 1) {
+          setMovies(response.movies);
+        } else {
+          setMovies(prevMovies => [...prevMovies, ...response.movies]);
+        }
+
+        // setTotalPages(response.totalPages);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [searchQuery, pageParam]);
+
+  const handleSubmit = e => {
     e.preventDefault();
     const form = e.currentTarget;
-    const query = e.target.elements[0].value.trim();
-
-    setSearchQuery(query);
+    const query = form.elements[0].value.trim();
 
     if (query === '') {
       setError('Please enter a search query');
-      resetMoviesState();
-      setIsSearched(false);
+      setMovies([]);
+      // setTotalPages(0);
+      setSearchParams({});
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetchSearchMovies(query, 1);
-
-      if (response.movies.length === 0) {
-        setError('No movies found');
-        resetMoviesState();
-        setIsSearched(false);
-      } else {
-        setMovies(response.movies);
-        setPage(1);
-        setTotalPages(response.totalPages);
-        setIsSearched(true);
-      }
-    } catch (error) {
-      setError(error.message);
-      resetMoviesState();
-      setIsSearched(false);
-    } finally {
-      setLoading(false);
-    }
-    form.reset();
+    setSearchParams({ query, page: 1 });
+    setMovies([]);
+    // setTotalPages(0);
   };
 
-  const handleLoadMore = async () => {
-    const nextPage = page + 1;
-    setLoading(true);
-
-    try {
-      const response = await fetchSearchMovies(searchQuery, nextPage);
-      setMovies(prevMovies => [...prevMovies, ...response.movies]);
-      setPage(nextPage);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleLoadMore = () => {
+  //   setSearchParams({ query: searchQuery, page: pageParam + 1 });
+  // };
 
   return (
     <div className={s.container}>
       <form onSubmit={handleSubmit} className={s.form}>
         <input
           type="text"
+          name="search"
           placeholder="Search movies..."
           autoComplete="off"
           autoFocus
+          defaultValue={searchQuery}
           className={s.input}
         />
         <button type="submit" className={s.button}>
@@ -125,7 +89,7 @@ const MoviesPage = () => {
 
       {error && <p>{error}</p>}
 
-      {isSearched && !loading && !error && movies.length === 0 && (
+      {!loading && !error && movies.length === 0 && searchQuery && (
         <p>No movies found</p>
       )}
 
@@ -133,11 +97,11 @@ const MoviesPage = () => {
         <MoviesList movies={movies} activeMovieId={activeMovieId} />
       )}
 
-      {!loading && page < totalPages && movies.length > 0 && (
+      {/* {!loading && pageParam < totalPages && movies.length > 0 && (
         <button className={s.button} onClick={handleLoadMore}>
           Load more
         </button>
-      )}
+      )} */}
     </div>
   );
 };

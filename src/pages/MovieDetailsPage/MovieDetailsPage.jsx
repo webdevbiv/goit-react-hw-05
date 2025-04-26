@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   NavLink,
   Outlet,
@@ -15,9 +15,12 @@ const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const backLinkRef = useRef(location.state?.from ?? '/movies');
+  const activeMovieIdRef = useRef(location.state?.activeMovieId ?? null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [movieDetails, setMovieDetails] = useState(null);
 
   useEffect(() => {
@@ -38,8 +41,8 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(location.state?.from ?? '/movies', {
-      state: { activeMovieId: location.state?.activeMovieId },
+    navigate(backLinkRef.current, {
+      state: { activeMovieId: activeMovieIdRef.current },
     });
   };
 
@@ -48,9 +51,11 @@ const MovieDetailsPage = () => {
       <button onClick={handleGoBack} className={s.button}>
         Go back
       </button>
+
       {loading && <BarLoader margin="14px" />}
       {error && <p>{error}</p>}
       {!loading && !error && !movieDetails && <p>No movie details found</p>}
+
       {movieDetails && (
         <div>
           <div className={s.wr}>
@@ -88,12 +93,12 @@ const MovieDetailsPage = () => {
             <nav>
               <ul className={s.listInfo}>
                 <li>
-                  <NavLink to={`cast`} className={s.link}>
+                  <NavLink to="cast" className={s.link}>
                     Cast
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to={`reviews`} className={s.link}>
+                  <NavLink to="reviews" className={s.link}>
                     Reviews
                   </NavLink>
                 </li>
