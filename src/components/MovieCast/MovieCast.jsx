@@ -3,6 +3,7 @@ import { fetchMovieCast } from '../../services/tmdbApi';
 import { useParams } from 'react-router-dom';
 import placeholder from '../../assets/movie-placeholder.svg';
 import { BarLoader } from 'react-spinners';
+import s from './MovieCast.module.scss';
 
 const MovieCast = () => {
   const { movieId } = useParams();
@@ -29,12 +30,12 @@ const MovieCast = () => {
 
   return (
     <div>
-      {loading && <BarLoader />}
+      {loading && <BarLoader margin="14px" />}
       {error && <p>{error}</p>}
       {cast.length > 0 && (
         <ul>
           {cast.map(actor => (
-            <li key={actor.id}>
+            <li key={actor.id} className={s.item}>
               <img
                 src={
                   actor.profile_path
@@ -42,11 +43,10 @@ const MovieCast = () => {
                     : placeholder
                 }
                 alt={actor.name}
-                width="150"
-                height="225"
+                className={s.image}
               />
-              <p>{actor.name}</p>
-              <p>Character: {actor.character}</p>
+              <p className={s.info}>{actor.name}</p>
+              <p className={s.info}>Character: {actor.character}</p>
             </li>
           ))}
         </ul>

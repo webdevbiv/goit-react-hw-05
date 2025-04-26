@@ -1,0 +1,11 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  margin-bottom: 4px;
+  &:hover {
+    color: #f78f18;
+  }
+}

@@ -3,6 +3,8 @@ import { fetchSearchMovies } from '../../services/tmdbApi';
 import MoviesList from '../../components/MoviesList/MoviesList';
 import { BarLoader } from 'react-spinners';
 
+import s from './MoviesPage.module.scss';
+
 const MoviesPage = () => {
   const [searchQuery, setSearchQuery] = useState(() => {
     const saved = localStorage.getItem('savedMovies');
@@ -28,28 +30,35 @@ const MoviesPage = () => {
   const [error, setError] = useState(null);
   const [isSearched, setIsSearched] = useState(false);
 
-  useEffect(() => {
-    if (movies.length > 0) {
-      localStorage.setItem(
-        'savedMovies',
-        JSON.stringify({
-          movies,
-          page,
-          totalPages,
-          searchQuery,
-        })
-      );
-    }
-  }, [movies, page, totalPages, searchQuery]);
-
-  const handleInputChange = e => {
-    setSearchQuery(e.target.value);
+  const resetMoviesState = () => {
+    setMovies([]);
+    setPage(1);
+    setTotalPages(0);
   };
+
+  useEffect(() => {
+    localStorage.setItem(
+      'savedMovies',
+      JSON.stringify({
+        movies,
+        page,
+        totalPages,
+        searchQuery,
+      })
+    );
+  }, [movies, page, totalPages, searchQuery]);
 
   const handleSubmit = async e => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const query = e.target.elements[0].value.trim();
 
-    if (searchQuery.trim() === '') {
+    setSearchQuery(query);
+
+    if (query === '') {
+      setError('Please enter a search query');
+      resetMoviesState();
+      setIsSearched(false);
       return;
     }
 
@@ -57,13 +66,12 @@ const MoviesPage = () => {
     setError(null);
 
     try {
-      const response = await fetchSearchMovies(searchQuery, 1); // page 1
+      const response = await fetchSearchMovies(query, 1);
 
       if (response.movies.length === 0) {
         setError('No movies found');
-        setMovies([]);
-        setPage(1);
-        setTotalPages(0);
+        resetMoviesState();
+        setIsSearched(false);
       } else {
         setMovies(response.movies);
         setPage(1);
@@ -72,12 +80,12 @@ const MoviesPage = () => {
       }
     } catch (error) {
       setError(error.message);
-      setMovies([]);
-      setPage(1);
-      setTotalPages(0);
+      resetMoviesState();
+      setIsSearched(false);
     } finally {
       setLoading(false);
     }
+    form.reset();
   };
 
   const handleLoadMore = async () => {
@@ -96,20 +104,21 @@ const MoviesPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className={s.container}>
+      <form onSubmit={handleSubmit} className={s.form}>
         <input
           type="text"
           placeholder="Search movies..."
-          value={searchQuery}
-          onChange={handleInputChange}
           autoComplete="off"
           autoFocus
+          className={s.input}
         />
-        <button type="submit">Search</button>
+        <button type="submit" className={s.button}>
+          Search
+        </button>
       </form>
 
-      {loading && <BarLoader />}
+      {loading && <BarLoader margin="14px" />}
 
       {error && <p>{error}</p>}
 
@@ -120,7 +129,9 @@ const MoviesPage = () => {
       {movies.length > 0 && <MoviesList movies={movies} />}
 
       {!loading && page < totalPages && movies.length > 0 && (
-        <button onClick={handleLoadMore}>Load more</button>
+        <button className={s.button} onClick={handleLoadMore}>
+          Load more
+        </button>
       )}
     </div>
   );

@@ -3,6 +3,8 @@ import { fetchMovieReviews } from '../../services/tmdbApi';
 import { useParams } from 'react-router-dom';
 import { BarLoader } from 'react-spinners';
 
+import s from './MovieReviews.module.scss';
+
 const MovieReviews = () => {
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -28,13 +30,13 @@ const MovieReviews = () => {
 
   return (
     <div>
-      {loading && <BarLoader />}
+      {loading && <BarLoader margin="14px" />}
       {error && <p>{error}</p>}
       {reviews.length > 0 && (
         <ul>
           {reviews.map(review => (
-            <li key={review.id}>
-              <p>Author: {review.author}</p>
+            <li key={review.id} className={s.review}>
+              <p className={s.author}>Author: {review.author}</p>
               <p dangerouslySetInnerHTML={{ __html: review.content }} />
             </li>
           ))}

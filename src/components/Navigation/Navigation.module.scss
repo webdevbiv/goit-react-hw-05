@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #282c34;
+
+  &__list {
+    display: flex;
+    gap: 14px;
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  &__link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    &__active {
+      color: #f78f18;
+    }
+  }
+}

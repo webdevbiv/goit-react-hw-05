@@ -19,7 +19,13 @@ const AppRoutes = () => {
     <>
       <Navigation />
 
-      <Suspense fallback={<PropagateLoader />}>
+      <Suspense
+        fallback={
+          <div className="loaderContainer">
+            <PropagateLoader color="#282c34" />
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />

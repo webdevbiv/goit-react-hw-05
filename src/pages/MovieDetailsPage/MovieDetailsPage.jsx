@@ -9,6 +9,7 @@ import {
 import { fetchMovieDetails } from '../../services/tmdbApi';
 import placeholder from '../../assets/movie-placeholder.svg';
 import { BarLoader } from 'react-spinners';
+import s from './MovieDetailsPage.module.scss';
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
@@ -41,14 +42,16 @@ const MovieDetailsPage = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleGoBack}>Go back</button>
-      {loading && <BarLoader />}
+    <div className={s.container}>
+      <button onClick={handleGoBack} className={s.button}>
+        Go back
+      </button>
+      {loading && <BarLoader margin="14px" />}
       {error && <p>{error}</p>}
       {!loading && !error && !movieDetails && <p>No movie details found</p>}
       {movieDetails && (
         <div>
-          <div>
+          <div className={s.wr}>
             <img
               src={
                 movieDetails.poster_path
@@ -56,21 +59,22 @@ const MovieDetailsPage = () => {
                   : placeholder
               }
               alt={movieDetails.title}
-              width="300"
-              height="450"
+              className={s.image}
             />
             <div>
-              <h1>
+              <h1 className={s.title}>
                 <span>{movieDetails.title}</span>{' '}
                 {movieDetails.release_date && (
                   <span>({movieDetails.release_date.split('-')[0]})</span>
                 )}
               </h1>
-              <p>User Score: {Math.floor(movieDetails.vote_average * 10)}%</p>
-              <h2>Overview</h2>
-              <p>{movieDetails.overview}</p>
-              <h2>Genres</h2>
-              <ul>
+              <p className={s.text}>
+                User Score: {Math.floor(movieDetails.vote_average * 10)}%
+              </p>
+              <h2 className={s.title}>Overview</h2>
+              <p className={s.text}>{movieDetails.overview}</p>
+              <h2 className={s.title}>Genres</h2>
+              <ul className={s.list}>
                 {movieDetails.genres.map(genre => (
                   <li key={genre.id}>{genre.name}</li>
                 ))}
@@ -78,14 +82,18 @@ const MovieDetailsPage = () => {
             </div>
           </div>
           <div>
-            <h2>Additional information</h2>
+            <h2 className={s.title}>Additional information</h2>
             <nav>
-              <ul>
+              <ul className={s.listInfo}>
                 <li>
-                  <NavLink to={`cast`}>Cast</NavLink>
+                  <NavLink to={`cast`} className={s.link}>
+                    Cast
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to={`reviews`}>Reviews</NavLink>
+                  <NavLink to={`reviews`} className={s.link}>
+                    Reviews
+                  </NavLink>
                 </li>
               </ul>
             </nav>

@@ -1,10 +1,9 @@
 import AppRoutes from './routes/AppRoutes';
-import TestApi from './services/TestApi';
+import './App.scss';
 
 function App() {
   return (
     <>
-      {/* <TestApi /> */}
       <AppRoutes />
     </>
   );
