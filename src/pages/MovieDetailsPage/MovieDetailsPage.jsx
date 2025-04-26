@@ -38,7 +38,9 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(location.state?.from ?? '/movies');
+    navigate(location.state?.from ?? '/movies', {
+      state: { activeMovieId: location.state?.activeMovieId },
+    });
   };
 
   return (

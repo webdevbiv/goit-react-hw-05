@@ -4,8 +4,11 @@ import MoviesList from '../../components/MoviesList/MoviesList';
 import { BarLoader } from 'react-spinners';
 
 import s from './MoviesPage.module.scss';
+import { useLocation } from 'react-router-dom';
 
 const MoviesPage = () => {
+  const location = useLocation();
+  const activeMovieId = location.state?.activeMovieId ?? null;
   const [searchQuery, setSearchQuery] = useState(() => {
     const saved = localStorage.getItem('savedMovies');
     return saved ? JSON.parse(saved).searchQuery : '';
@@ -126,7 +129,9 @@ const MoviesPage = () => {
         <p>No movies found</p>
       )}
 
-      {movies.length > 0 && <MoviesList movies={movies} />}
+      {movies.length > 0 && (
+        <MoviesList movies={movies} activeMovieId={activeMovieId} />
+      )}
 
       {!loading && page < totalPages && movies.length > 0 && (
         <button className={s.button} onClick={handleLoadMore}>
