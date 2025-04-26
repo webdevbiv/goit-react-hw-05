@@ -64,7 +64,10 @@ const MovieDetailsPage = () => {
             />
             <div>
               <h1>
-                {movieDetails.title} ({movieDetails.release_date.split('-')[0]})
+                <span>{movieDetails.title}</span>{' '}
+                {movieDetails.release_date && (
+                  <span>({movieDetails.release_date.split('-')[0]})</span>
+                )}
               </h1>
               <p>User Score: {Math.floor(movieDetails.vote_average * 10)}%</p>
               <h2>Overview</h2>
