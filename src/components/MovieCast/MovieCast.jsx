@@ -51,6 +51,9 @@ const MovieCast = () => {
           ))}
         </ul>
       )}
+      {!loading && !error && cast.length === 0 && (
+        <p>We don't have cast information for this movie.</p>
+      )}
     </div>
   );
 };
