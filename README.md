@@ -1,12 +1,37 @@
-# React + Vite
+# 📽️ Movie Search App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based application for searching movies via [The Movie Database (TMDB)
+API].
 
-Currently, two official plugins are available:
+Built with:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React Router
+- Axios
+- React Spinners
+- Vite
+- TMDB API
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Features
+
+- Search movies by keywords
+- View movie details (poster, overview, genres, user score)
+- View cast and reviews
+- Load more results with pagination
+- Save search results, page, and query to LocalStorage
+- Restore search results after reload or navigation
+- Centered and animated loaders
+- 404 Not Found page
+- Code splitting with `React.lazy` and `Suspense`
+
+---
+
+## 🛠 Technologies
+
+- React 18+
+- React Router v6
+- Axios
+- React Spinners
+- SCSS Modules
+- Vite
