@@ -9,13 +9,12 @@ const MoviesPage = () => {
   const location = useLocation();
   const activeMovieId = location.state?.activeMovieId ?? null;
   const [searchParams, setSearchParams] = useSearchParams();
-  // console.log(searchParams);
 
   const searchQuery = searchParams.get('query') || '';
   const pageParam = Number(searchParams.get('page')) || 1;
 
   const [movies, setMovies] = useState([]);
-  // const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,13 +28,8 @@ const MoviesPage = () => {
       try {
         const response = await fetchSearchMovies(searchQuery, pageParam);
 
-        if (pageParam === 1) {
-          setMovies(response.movies);
-        } else {
-          setMovies(prevMovies => [...prevMovies, ...response.movies]);
-        }
-
-        // setTotalPages(response.totalPages);
+        setMovies(response.movies);
+        setTotalPages(response.totalPages);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -49,24 +43,24 @@ const MoviesPage = () => {
   const handleSubmit = e => {
     e.preventDefault();
     const form = e.currentTarget;
-    const query = form.elements[0].value.trim();
+    const query = form.elements.search.value.trim();
 
     if (query === '') {
       setError('Please enter a search query');
       setMovies([]);
-      // setTotalPages(0);
+      setTotalPages(0);
       setSearchParams({});
       return;
     }
 
     setSearchParams({ query, page: 1 });
     setMovies([]);
-    // setTotalPages(0);
+    setTotalPages(0);
   };
 
-  // const handleLoadMore = () => {
-  //   setSearchParams({ query: searchQuery, page: pageParam + 1 });
-  // };
+  const handlePageChange = newPage => {
+    setSearchParams({ query: searchQuery, page: newPage });
+  };
 
   return (
     <div className={s.container}>
@@ -94,14 +88,29 @@ const MoviesPage = () => {
       )}
 
       {movies.length > 0 && (
-        <MoviesList movies={movies} activeMovieId={activeMovieId} />
-      )}
+        <>
+          <MoviesList movies={movies} activeMovieId={activeMovieId} />
 
-      {/* {!loading && pageParam < totalPages && movies.length > 0 && (
-        <button className={s.button} onClick={handleLoadMore}>
-          Load more
-        </button>
-      )} */}
+          <div className={s.pagination}>
+            {pageParam > 1 && (
+              <button
+                className={s.button}
+                onClick={() => handlePageChange(pageParam - 1)}
+              >
+                Previous
+              </button>
+            )}
+            {pageParam < totalPages && (
+              <button
+                className={s.button}
+                onClick={() => handlePageChange(pageParam + 1)}
+              >
+                Next
+              </button>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
