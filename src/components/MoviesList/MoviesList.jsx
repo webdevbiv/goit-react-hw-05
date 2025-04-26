@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
 const MoviesList = ({ movies }) => {
-  const { location } = useLocation();
+  const location = useLocation();
 
   if (!movies || movies.length === 0) {
     return;

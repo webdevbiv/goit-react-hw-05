@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchTrendingMovies } from '../../services/tmdbApi';
 import MovieList from '../../components/MoviesList/MoviesList';
+import { BarLoader } from 'react-spinners';
 
 const HomePage = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -10,6 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     const getTrendingMovies = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await fetchTrendingMovies();
         setTrendingMovies(response);
@@ -19,12 +21,13 @@ const HomePage = () => {
         setLoading(false);
       }
     };
+
     getTrendingMovies();
   }, []);
 
   return (
     <>
-      {loading && <p>Loading...</p>}
+      {loading && <BarLoader />}
       {error && <p>Error: {error}</p>}
       {trendingMovies.length > 0 && <MovieList movies={trendingMovies} />}
     </>

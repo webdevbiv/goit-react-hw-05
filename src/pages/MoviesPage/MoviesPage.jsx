@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { fetchSearchMovies } from '../../services/tmdbApi';
 import MoviesList from '../../components/MoviesList/MoviesList';
+import { BarLoader } from 'react-spinners';
 
 const MoviesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,7 +72,7 @@ const MoviesPage = () => {
         <p>No movies found</p>
       )}
       {movies.length > 0 && <MoviesList movies={movies} />}
-      {loading && <p>Loading...</p>}
+      {loading && <BarLoader />}
 
       {page < totalPages && <button onClick={handleLoadMore}>Load more</button>}
     </div>
