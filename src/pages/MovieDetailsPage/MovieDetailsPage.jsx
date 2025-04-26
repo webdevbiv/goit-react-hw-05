@@ -13,10 +13,7 @@ import { BarLoader } from 'react-spinners';
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const navigate = useNavigate();
-
   const location = useLocation();
-  console.log(location);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
