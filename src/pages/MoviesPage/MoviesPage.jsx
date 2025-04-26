@@ -9,7 +9,7 @@ const MoviesPage = () => {
   const location = useLocation();
   const activeMovieId = location.state?.activeMovieId ?? null;
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(searchParams);
+  // console.log(searchParams);
 
   const searchQuery = searchParams.get('query') || '';
   const pageParam = Number(searchParams.get('page')) || 1;
