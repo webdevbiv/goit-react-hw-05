@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import s from './Navigation.module.scss';
 
 const getNavLinkClass = ({ isActive }) =>
-  clsx(s.header__link, isActive && s.header__link__active);
+  clsx(s.link, isActive && s.link__active);
 
 const Navigation = () => {
   return (
     <header className={s.header}>
       <nav>
-        <ul className={s.header__list}>
+        <ul className={s.list}>
           <li>
             <NavLink to="/" className={getNavLinkClass}>
               Home
